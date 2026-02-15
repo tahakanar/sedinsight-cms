@@ -2,25 +2,27 @@
 
 import { motion } from 'framer-motion'
 import { ArrowRight, FileText, HelpCircle, PhoneCall } from 'lucide-react'
-
-import type { ServiceDetail } from '@/lib/services'
-import Layout from './Layout'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+
+import type { ServiceListItem, ServicePageSettingsView } from '@/lib/services'
+
+import Layout from './Layout'
 
 interface ServiceDetailLayoutProps {
-  service: ServiceDetail
-  services: ServiceDetail[]
   children: React.ReactNode
+  currentSlug: string
+  service: ServiceListItem
+  services: ServiceListItem[]
+  settings: ServicePageSettingsView
 }
 
 export default function ServiceDetailLayout({
+  children,
+  currentSlug,
   service,
   services,
-  children,
+  settings,
 }: ServiceDetailLayoutProps) {
-  const pathname = usePathname()
-
   return (
     <Layout>
       <section className="relative pt-34 pb-16 bg-navy overflow-hidden">
@@ -60,11 +62,11 @@ export default function ServiceDetailLayout({
           <aside className="lg:sticky lg:top-24 space-y-6">
             <div className="rounded-3xl border border-navy/10 bg-white p-6 shadow-[0_10px_30px_rgba(15,42,68,0.08)]">
               <p className="text-xs font-bold tracking-widest uppercase text-teal mb-4">
-                Hizmetlerimiz
+                {settings.sidebar.servicesLabel}
               </p>
               <div className="space-y-2">
                 {services.map((item) => {
-                  const active = pathname === item.path
+                  const active = currentSlug === item.slug
                   return (
                     <Link
                       key={item.slug}
@@ -88,17 +90,16 @@ export default function ServiceDetailLayout({
                 <FileText className="size-5" />
               </div>
               <h3 className="mt-4 text-lg font-bold text-navy leading-tight">
-                A Complete Guide to Employee Engagement
+                {settings.sidebar.guideCard.title}
               </h3>
               <p className="mt-3 text-sm text-gray leading-relaxed">
-                Operasyonel verim ve ekip uyumunu artırmak için kullanılan temel yaklaşım
-                başlıklarını tek bir rehberde topladık.
+                {settings.sidebar.guideCard.description}
               </p>
               <Link
-                href="/sss"
+                href={settings.sidebar.guideCard.linkHref}
                 className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-teal hover:text-navy transition-colors"
               >
-                Rehberi İncele
+                {settings.sidebar.guideCard.linkLabel}
                 <ArrowRight className="size-4" />
               </Link>
             </div>
@@ -107,19 +108,21 @@ export default function ServiceDetailLayout({
               <div className="inline-flex size-10 items-center justify-center rounded-xl bg-white/10 text-teal">
                 <HelpCircle className="size-5" />
               </div>
-              <h3 className="mt-4 text-lg font-bold text-white">Have Questions?</h3>
+              <h3 className="mt-4 text-lg font-bold text-white">
+                {settings.sidebar.questionCard.title}
+              </h3>
               <p className="mt-3 text-sm text-white/70 leading-relaxed">
-                İşletmeniz için hangi hizmetin öncelikli olduğuna birlikte karar verelim.
+                {settings.sidebar.questionCard.description}
               </p>
               <div className="mt-5 flex items-center gap-2 text-white/90 text-sm font-semibold">
                 <PhoneCall className="size-4 text-teal" />
-                +90 555 555 55 55
+                {settings.sidebar.questionCard.phone}
               </div>
               <Link
-                href="/iletisim"
+                href={settings.sidebar.questionCard.ctaHref}
                 className="mt-5 inline-flex items-center justify-center rounded-full bg-teal px-5 py-2.5 text-sm font-bold text-white hover:bg-teal/90 transition-colors"
               >
-                İletişime Geç
+                {settings.sidebar.questionCard.ctaLabel}
               </Link>
             </div>
           </aside>

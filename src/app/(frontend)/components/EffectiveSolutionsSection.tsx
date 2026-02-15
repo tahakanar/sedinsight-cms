@@ -1,32 +1,42 @@
-import { ThumbsUp, ArrowRight } from 'lucide-react'
+import { ArrowRight, ThumbsUp } from 'lucide-react'
 import Link from 'next/link'
-import { services } from '@/lib/services'
+
+import type { ServiceListItem } from '@/lib/services'
 
 interface EffectiveSolutionsSectionProps {
   id?: string
+  labels: {
+    badge: string
+    description: string
+    readMoreLabel: string
+    title: string
+  }
+  services: ServiceListItem[]
   showBottomWave?: boolean
   waveColor?: string
 }
 
 export default function EffectiveSolutionsSection({
   id = 'surec',
+  labels,
+  services,
   showBottomWave = true,
   waveColor = '#0f2a44',
 }: EffectiveSolutionsSectionProps) {
+  void showBottomWave
+  void waveColor
+
   return (
     <section id={id} className="relative pt-24 bg-[#e9ecf2] overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-14">
         <div className="text-center max-w-4xl mx-auto">
           <span className="text-teal text-sm sm:text-base font-bold tracking-[0.22em] uppercase">
-            Leading
+            {labels.badge}
           </span>
           <h2 className="mt-4 font-['Bricolage_Grotesque'] text-5xl sm:text-6xl font-black text-navy tracking-tight">
-            Effective Solutions
+            {labels.title}
           </h2>
-          <p className="mt-6 text-lg text-gray-dark/70 leading-relaxed">
-            İşletmenin dijital yolculuğunu doğru sırayla, doğru hedefle ve sürdürülebilir etkiyle
-            ilerleten 4 temel çözüm alanı.
-          </p>
+          <p className="mt-6 text-lg text-gray-dark/70 leading-relaxed">{labels.description}</p>
         </div>
 
         <div className="mt-14 grid gap-6 md:grid-cols-2">
@@ -38,7 +48,7 @@ export default function EffectiveSolutionsSection({
               <div className="relative h-56 overflow-hidden">
                 <img
                   src={item.image}
-                  alt={item.title}
+                  alt={item.imageAlt || item.title}
                   className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-navy/20 transition-opacity duration-300 group-hover:opacity-0" />
@@ -68,7 +78,7 @@ export default function EffectiveSolutionsSection({
                     href={item.path}
                     className="mt-6 inline-flex items-center gap-2 text-lg font-bold text-navy transition-colors duration-300 group-hover:text-white"
                   >
-                    Read More
+                    {labels.readMoreLabel}
                     <ArrowRight className="size-5 transition-transform duration-300 group-hover:translate-x-1" />
                   </Link>
                 </div>

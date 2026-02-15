@@ -1,4 +1,7 @@
-import type { CollectionSlug, GlobalSlug, Payload, PayloadRequest, File } from 'payload'
+import type { CollectionSlug, File, GlobalSlug, Payload, PayloadRequest } from 'payload'
+
+import { promises as fs } from 'fs'
+import path from 'path'
 
 import { contactForm as contactFormData } from './contact-form'
 import { contact as contactPageData } from './contact-page'
@@ -9,6 +12,8 @@ import { imageHero1 } from './image-hero-1'
 import { post1 } from './post-1'
 import { post2 } from './post-2'
 import { post3 } from './post-3'
+import { servicePageSettingsSeed } from './service-page-settings'
+import { serviceImagesSeed, servicesSeed } from './services'
 
 const collections: CollectionSlug[] = [
   'categories',
@@ -18,6 +23,8 @@ const collections: CollectionSlug[] = [
   'forms',
   'form-submissions',
   'search',
+  'services',
+  'service-page-settings',
 ]
 
 const globals: GlobalSlug[] = ['header', 'footer']
@@ -127,6 +134,9 @@ export const seed = async ({
       data: imageHero1,
       file: hero1Buffer,
     }),
+  ])
+
+  await Promise.all(
     categories.map((category) =>
       payload.create({
         collection: 'categories',
@@ -136,7 +146,25 @@ export const seed = async ({
         },
       }),
     ),
-  ])
+  )
+
+  const serviceImageEntries = await Promise.all(
+    Object.entries(serviceImagesSeed).map(async ([key, imageData]) => {
+      const file = await fetchFileByPath(imageData.filePath)
+
+      const imageDoc = await payload.create({
+        collection: 'media',
+        data: {
+          alt: imageData.alt,
+        },
+        file,
+      })
+
+      return [key, imageDoc] as const
+    }),
+  )
+
+  const serviceImageMap = Object.fromEntries(serviceImageEntries)
 
   payload.logger.info(`— Seeding posts...`)
 
@@ -214,6 +242,46 @@ export const seed = async ({
       data: contactPageData({ contactForm: contactForm }),
     }),
   ])
+
+  payload.logger.info(`— Seeding services...`)
+
+  await Promise.all(
+    servicesSeed.map((service) =>
+      payload.create({
+        collection: 'services',
+        depth: 0,
+        context: {
+          disableRevalidate: true,
+        },
+        data: {
+          _status: 'published',
+          deliverables: service.deliverables.map((text) => ({ text })),
+          description: service.description,
+          focusPoints: service.focusPoints.map((text) => ({ text })),
+          image: serviceImageMap[service.imageKey]?.id,
+          intro: service.intro,
+          order: service.order,
+          processFlow: service.processFlow,
+          slug: service.slug,
+          title: service.title,
+        },
+      }),
+    ),
+  )
+
+  payload.logger.info(`— Seeding service page settings...`)
+
+  await payload.create({
+    collection: 'service-page-settings',
+    depth: 0,
+    context: {
+      disableRevalidate: true,
+    },
+    data: {
+      _status: 'published',
+      ...servicePageSettingsSeed,
+    },
+  })
 
   payload.logger.info(`— Seeding globals...`)
 
@@ -293,6 +361,26 @@ async function fetchFileByURL(url: string): Promise<File> {
     name: url.split('/').pop() || `file-${Date.now()}`,
     data: Buffer.from(data),
     mimetype: `image/${url.split('.').pop()}`,
+    size: data.byteLength,
+  }
+}
+
+async function fetchFileByPath(filePath: string): Promise<File> {
+  const absolutePath = path.resolve(process.cwd(), filePath)
+  const data = await fs.readFile(absolutePath)
+  const ext = path.extname(filePath).replace('.', '').toLowerCase()
+
+  const mimeByExtension: Record<string, string> = {
+    jpg: 'image/jpeg',
+    jpeg: 'image/jpeg',
+    png: 'image/png',
+    webp: 'image/webp',
+  }
+
+  return {
+    name: path.basename(filePath),
+    data,
+    mimetype: mimeByExtension[ext] || 'application/octet-stream',
     size: data.byteLength,
   }
 }

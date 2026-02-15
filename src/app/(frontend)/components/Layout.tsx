@@ -14,7 +14,6 @@ interface LayoutProps {
 export default function Layout({ children }: LayoutProps) {
   const pathname = usePathname()
 
-  console.log('pathname', pathname)
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [pathname])

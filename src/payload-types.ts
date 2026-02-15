@@ -73,6 +73,8 @@ export interface Config {
     categories: Category;
     users: User;
     'faq-items': FaqItem;
+    services: Service;
+    'service-page-settings': ServicePageSetting;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -96,6 +98,8 @@ export interface Config {
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'faq-items': FaqItemsSelect<false> | FaqItemsSelect<true>;
+    services: ServicesSelect<false> | ServicesSelect<true>;
+    'service-page-settings': ServicePageSettingsSelect<false> | ServicePageSettingsSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -797,6 +801,93 @@ export interface FaqItem {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "services".
+ */
+export interface Service {
+  id: number;
+  title: string;
+  order: number;
+  description: string;
+  image: number | Media;
+  intro: string;
+  focusPoints: {
+    text: string;
+    id?: string | null;
+  }[];
+  deliverables: {
+    text: string;
+    id?: string | null;
+  }[];
+  processFlow: {
+    title: string;
+    detail: string;
+    id?: string | null;
+  }[];
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "service-page-settings".
+ */
+export interface ServicePageSetting {
+  id: number;
+  key: string;
+  listHero: {
+    badge: string;
+    title: string;
+    description: string;
+  };
+  listCta: {
+    title: string;
+    description: string;
+    buttonLabel: string;
+    buttonHref: string;
+  };
+  detailSectionTitles: {
+    focusPointsTitle: string;
+    deliverablesTitle: string;
+    processFlowTitle: string;
+  };
+  sidebar: {
+    servicesLabel: string;
+    guideCard: {
+      title: string;
+      description: string;
+      linkLabel: string;
+      linkHref: string;
+    };
+    questionCard: {
+      title: string;
+      description: string;
+      phone: string;
+      ctaLabel: string;
+      ctaHref: string;
+    };
+  };
+  notFound: {
+    title: string;
+    description: string;
+    buttonLabel: string;
+  };
+  effectiveSolutions: {
+    badge: string;
+    title: string;
+    description: string;
+    readMoreLabel: string;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -1008,6 +1099,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'faq-items';
         value: number | FaqItem;
+      } | null)
+    | ({
+        relationTo: 'services';
+        value: number | Service;
+      } | null)
+    | ({
+        relationTo: 'service-page-settings';
+        value: number | ServicePageSetting;
       } | null)
     | ({
         relationTo: 'redirects';
@@ -1384,6 +1483,110 @@ export interface FaqItemsSelect<T extends boolean = true> {
   order?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "services_select".
+ */
+export interface ServicesSelect<T extends boolean = true> {
+  title?: T;
+  order?: T;
+  description?: T;
+  image?: T;
+  intro?: T;
+  focusPoints?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  deliverables?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  processFlow?:
+    | T
+    | {
+        title?: T;
+        detail?: T;
+        id?: T;
+      };
+  generateSlug?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "service-page-settings_select".
+ */
+export interface ServicePageSettingsSelect<T extends boolean = true> {
+  key?: T;
+  listHero?:
+    | T
+    | {
+        badge?: T;
+        title?: T;
+        description?: T;
+      };
+  listCta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        buttonLabel?: T;
+        buttonHref?: T;
+      };
+  detailSectionTitles?:
+    | T
+    | {
+        focusPointsTitle?: T;
+        deliverablesTitle?: T;
+        processFlowTitle?: T;
+      };
+  sidebar?:
+    | T
+    | {
+        servicesLabel?: T;
+        guideCard?:
+          | T
+          | {
+              title?: T;
+              description?: T;
+              linkLabel?: T;
+              linkHref?: T;
+            };
+        questionCard?:
+          | T
+          | {
+              title?: T;
+              description?: T;
+              phone?: T;
+              ctaLabel?: T;
+              ctaHref?: T;
+            };
+      };
+  notFound?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        buttonLabel?: T;
+      };
+  effectiveSolutions?:
+    | T
+    | {
+        badge?: T;
+        title?: T;
+        description?: T;
+        readMoreLabel?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1780,6 +1983,14 @@ export interface TaskSchedulePublish {
       | ({
           relationTo: 'posts';
           value: number | Post;
+        } | null)
+      | ({
+          relationTo: 'services';
+          value: number | Service;
+        } | null)
+      | ({
+          relationTo: 'service-page-settings';
+          value: number | ServicePageSetting;
         } | null);
     global?: string | null;
     user?: (number | null) | User;

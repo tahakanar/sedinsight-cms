@@ -1,182 +1,325 @@
-import analizImg from '@/assets/analiz.png'
-import digitalImg from '@/assets/digital.png'
-import performanceImg from '@/assets/performance.png'
-import teknikImg from '@/assets/teknik.png'
+import configPromise from '@payload-config'
+import { getPayload } from 'payload'
+import { draftMode } from 'next/headers'
+import { cache } from 'react'
 
-export type ServiceSlug =
-  | 'mevcut-durum-analizi'
-  | 'stratejik-planlama'
-  | 'uygulama-ve-entegrasyon'
-  | 'performans-izleme-ve-optimizasyon'
+import type { Media, Service, ServicePageSetting } from '@/payload-types'
 
-export interface ServiceDetail {
-  slug: ServiceSlug
-  path: string
-  step: string
+import { getMediaUrl } from '@/utilities/getMediaUrl'
+
+export interface ServiceProcessStep {
+  detail: string
   title: string
-  description: string
-  image: string
-  intro: string
-  focusPoints: string[]
-  deliverables: string[]
-  processFlow: Array<{
-    title: string
-    detail: string
-  }>
 }
 
-export const services: ServiceDetail[] = [
-  {
-    slug: 'mevcut-durum-analizi',
-    path: '/hizmetler/mevcut-durum-analizi',
-    step: '01',
-    title: 'Mevcut Durum Analizi',
-    description: 'Denetim ve keşif ile “Şu anda neredeyiz?” sorusu yanıtlanır',
-    image: digitalImg,
-    intro:
-      'İşletmenin mevcut dijital altyapısını, süreçlerini ve ekip çalışma modelini objektif verilerle analiz ediyoruz. Amaç, sorunu tahmin etmek değil, somut olarak tespit etmek.',
-    focusPoints: [
-      'Mevcut araç ve platformların iş hedefleriyle uyumu',
-      'Süreçlerdeki tekrar eden aksama ve verimsizlik alanları',
-      'Ekiplerin rol, sorumluluk ve koordinasyon netliği',
-      'Veri akışı, raporlama ve karar alma hızını etkileyen kırılımlar',
-    ],
-    deliverables: [
-      'Dijital mevcut durum raporu',
-      'Risk ve öncelik matrisi',
-      'Kısa vadeli iyileştirme önerileri',
-      'Yönetim için karar notu',
-    ],
-    processFlow: [
-      {
-        title: 'Keşif Görüşmeleri',
-        detail:
-          'Yönetim, operasyon ve uygulama tarafında mevcut akışı netleştiren görüşmeler yapılır.',
-      },
-      {
-        title: 'Sistem ve Süreç Denetimi',
-        detail:
-          'Kullanılan dijital araçlar, veri akışı ve ekip etkileşim modeli birlikte değerlendirilir.',
-      },
-      {
-        title: 'Tespit ve Raporlama',
-        detail: 'Kritik bulgular önceliklendirilir ve uygulanabilir önerilerle raporlanır.',
-      },
-    ],
-  },
-  {
-    slug: 'stratejik-planlama',
-    path: '/hizmetler/stratejik-planlama',
-    step: '02',
-    title: 'Stratejik Planlama',
-    description: 'Yol haritası ile “Nereye gitmek istiyoruz?” netleştirilir',
-    image: teknikImg,
-    intro:
-      'İşletmenin hedefleriyle örtüşen, adım adım ilerlenebilir bir dijital strateji oluşturuyoruz. Böylece kaynaklar dağılmadan, doğru zamanda doğru yatırım yapılır.',
-    focusPoints: [
-      'Öncelik sıralaması ve etki/maliyet dengesi',
-      'Departmanlar arası eşgüdüm gerektiren aksiyonlar',
-      'Bütçe ve zaman planına uygun uygulama kurgusu',
-      'KPI ve başarı ölçüm yapısının net tanımlanması',
-    ],
-    deliverables: [
-      '90 günlük aksiyon planı',
-      '12 aylık stratejik yol haritası',
-      'KPI seti ve izleme çerçevesi',
-      'Rol ve sorumluluk dağılım planı',
-    ],
-    processFlow: [
-      {
-        title: 'Hedef Netleştirme',
-        detail:
-          'İşletmenin büyüme, verimlilik ve müşteri deneyimi hedefleri birlikte netleştirilir.',
-      },
-      {
-        title: 'Senaryo ve Öncelik Çalışması',
-        detail: 'Alternatif uygulama senaryoları değerlendirilir ve en doğru sıralama belirlenir.',
-      },
-      {
-        title: 'Yol Haritası Tasarımı',
-        detail:
-          'Kısa, orta ve uzun vadeli aksiyonların bağlı olduğu net bir uygulama planı hazırlanır.',
-      },
-    ],
-  },
-  {
-    slug: 'uygulama-ve-entegrasyon',
-    path: '/hizmetler/uygulama-ve-entegrasyon',
-    step: '03',
-    title: 'Uygulama ve Entegrasyon',
-    description: 'Uygulama ekipleriyle süreç işletme hedeflerine uygun şekilde ilerler',
-    image: analizImg,
-    intro:
-      'Planlanan stratejinin sahada doğru şekilde hayata geçmesi için uygulama ekipleriyle koordineli ilerliyoruz. Odak, iş hedefinden sapmadan sağlıklı teslimattır.',
-    focusPoints: [
-      'Ajans/yazılım ekipleriyle doğru brif ve kapsam yönetimi',
-      'Zaman planı, bağımlılık ve teslim takviminin yönetimi',
-      'Karar noktalarında işletme önceliklerinin korunması',
-      'Teknik uygulamanın operasyonla uyumunun takibi',
-    ],
-    deliverables: [
-      'Uygulama takip planı',
-      'Haftalık ilerleme raporu',
-      'Kritik karar noktası notları',
-      'Canlıya geçiş kontrol listesi',
-    ],
-    processFlow: [
-      {
-        title: 'Uygulama Hazırlığı',
-        detail: 'Kapsam, öncelik ve teslim beklentileri uygulama ekipleriyle netleştirilir.',
-      },
-      {
-        title: 'Koordinasyon ve Takip',
-        detail: 'Toplantı ritmi, görev akışı ve bağımlılıklar yakından takip edilerek ilerlenir.',
-      },
-      {
-        title: 'Canlıya Geçiş ve Stabilizasyon',
-        detail: 'Devreye alma sonrası süreç performansı izlenir ve gerekli düzeltmeler planlanır.',
-      },
-    ],
-  },
-  {
-    slug: 'performans-izleme-ve-optimizasyon',
-    path: '/hizmetler/performans-izleme-ve-optimizasyon',
-    step: '04',
-    title: 'Performans İzleme ve Optimizasyon',
-    description: 'Süreç düzenli izlenir, değerlendirilir ve gerektiğinde güncellenir',
-    image: performanceImg,
-    intro:
-      'Kurulan yapıların zaman içinde ne kadar sonuç ürettiğini takip ediyoruz. Ölçüm, öğrenme ve iyileştirme döngüsüyle süreci canlı ve sürdürülebilir tutuyoruz.',
-    focusPoints: [
-      'Belirlenen KPI metriklerinin düzenli takibi',
-      'Süreçte sapma yaratan nedenlerin analizi',
-      'Veriye dayalı iyileştirme kararlarının alınması',
-      'Yeni ihtiyaçlara göre plan güncelleme çevikliği',
-    ],
-    deliverables: [
-      'Aylık performans değerlendirme raporu',
-      'Optimizasyon öneri listesi',
-      'KPI trend analizi',
-      'Güncellenmiş aksiyon planı',
-    ],
-    processFlow: [
-      {
-        title: 'Ölçüm ve İzleme',
-        detail: 'KPI dashboardları ve düzenli raporlarla performans görünürlüğü sağlanır.',
-      },
-      {
-        title: 'Analiz ve Teşhis',
-        detail: 'Beklenen-sonuç farkı analiz edilerek iyileştirme alanları netleştirilir.',
-      },
-      {
-        title: 'Optimizasyon Uygulaması',
-        detail:
-          'Belirlenen geliştirmeler devreye alınır ve etkisi tekrar ölçülerek döngü tamamlanır.',
-      },
-    ],
-  },
-]
+export interface ServiceListItem {
+  deliverables: string[]
+  description: string
+  focusPoints: string[]
+  image: string
+  imageAlt: string
+  intro: string
+  path: string
+  processFlow: ServiceProcessStep[]
+  slug: string
+  step: string
+  title: string
+}
 
-export function getServiceBySlug(slug: string | undefined) {
-  return services.find((service) => service.slug === slug)
+export interface ServicePageSettingsView {
+  detailSectionTitles: {
+    deliverablesTitle: string
+    focusPointsTitle: string
+    processFlowTitle: string
+  }
+  effectiveSolutions: {
+    badge: string
+    description: string
+    readMoreLabel: string
+    title: string
+  }
+  listCta: {
+    buttonHref: string
+    buttonLabel: string
+    description: string
+    title: string
+  }
+  listHero: {
+    badge: string
+    description: string
+    title: string
+  }
+  notFound: {
+    buttonLabel: string
+    description: string
+    title: string
+  }
+  sidebar: {
+    guideCard: {
+      description: string
+      linkHref: string
+      linkLabel: string
+      title: string
+    }
+    questionCard: {
+      ctaHref: string
+      ctaLabel: string
+      description: string
+      phone: string
+      title: string
+    }
+    servicesLabel: string
+  }
+}
+
+const defaultServicePageSettings: ServicePageSettingsView = {
+  detailSectionTitles: {
+    deliverablesTitle: 'Teslimatlar',
+    focusPointsTitle: 'Bu Hizmette Odaklandığımız Alanlar',
+    processFlowTitle: 'Çalışma Akışı',
+  },
+  effectiveSolutions: {
+    badge: 'Leading',
+    description:
+      'İşletmenin dijital yolculuğunu doğru sırayla, doğru hedefle ve sürdürülebilir etkiyle ilerleten 4 temel çözüm alanı.',
+    readMoreLabel: 'Read More',
+    title: 'Effective Solutions',
+  },
+  listCta: {
+    buttonHref: '/iletisim',
+    buttonLabel: 'Iletisim Formuna Git',
+    description: 'Hizmet kapsamini isletmeniz icin birlikte netlestirelim.',
+    title: 'Siradaki adim icin iletisime gecelim',
+  },
+  listHero: {
+    badge: 'Hizmetlerimiz',
+    description:
+      'Dijital sureclerinizi sadece uygulamaya degil, isletme hedeflerine baglayan 4 temel hizmet adimi.',
+    title: 'Planli, Olculebilir ve Sonuca Odakli Hizmetler',
+  },
+  notFound: {
+    buttonLabel: 'Hizmetlere Dön',
+    description: 'Aradığınız hizmet sayfası mevcut değil.',
+    title: 'Hizmet bulunamadı',
+  },
+  sidebar: {
+    guideCard: {
+      description:
+        'Operasyonel verim ve ekip uyumunu artırmak için kullanılan temel yaklaşım başlıklarını tek bir rehberde topladık.',
+      linkHref: '/sss',
+      linkLabel: 'Rehberi İncele',
+      title: 'A Complete Guide to Employee Engagement',
+    },
+    questionCard: {
+      ctaHref: '/iletisim',
+      ctaLabel: 'İletişime Geç',
+      description: 'İşletmeniz için hangi hizmetin öncelikli olduğuna birlikte karar verelim.',
+      phone: '+90 555 555 55 55',
+      title: 'Have Questions?',
+    },
+    servicesLabel: 'Hizmetlerimiz',
+  },
+}
+
+const resolveMedia = (image: Service['image']) => {
+  if (!image || typeof image !== 'object') {
+    return {
+      alt: '',
+      url: '',
+    }
+  }
+
+  const typedImage = image as Media
+
+  return {
+    alt: typedImage.alt || '',
+    url: getMediaUrl(typedImage.url),
+  }
+}
+
+const getIsDraftEnabled = async (): Promise<boolean> => {
+  try {
+    const { isEnabled } = await draftMode()
+    return isEnabled
+  } catch {
+    return false
+  }
+}
+
+const queryServices = cache(async (): Promise<Service[]> => {
+  const draft = await getIsDraftEnabled()
+  const payload = await getPayload({ config: configPromise })
+
+  const result = await payload.find({
+    collection: 'services',
+    depth: 1,
+    draft,
+    limit: 1000,
+    overrideAccess: draft,
+    pagination: false,
+    sort: 'order',
+  })
+
+  return result.docs
+})
+
+const queryServiceSettings = cache(async (): Promise<ServicePageSetting | null> => {
+  const draft = await getIsDraftEnabled()
+  const payload = await getPayload({ config: configPromise })
+
+  const result = await payload.find({
+    collection: 'service-page-settings',
+    depth: 0,
+    draft,
+    limit: 1,
+    overrideAccess: draft,
+    pagination: false,
+    where: {
+      key: {
+        equals: 'default',
+      },
+    },
+  })
+
+  return result.docs[0] || null
+})
+
+const mapService = (service: Service, index: number): ServiceListItem => {
+  const media = resolveMedia(service.image)
+
+  return {
+    deliverables: service.deliverables?.map((item) => item.text).filter(Boolean) || [],
+    description: service.description,
+    focusPoints: service.focusPoints?.map((item) => item.text).filter(Boolean) || [],
+    image: media.url,
+    imageAlt: media.alt || service.title,
+    intro: service.intro,
+    path: `/hizmetler/${service.slug}`,
+    processFlow: service.processFlow || [],
+    slug: service.slug,
+    step: String(index + 1).padStart(2, '0'),
+    title: service.title,
+  }
+}
+
+const mapSettings = (settings: ServicePageSetting | null): ServicePageSettingsView => {
+  if (!settings) {
+    return defaultServicePageSettings
+  }
+
+  return {
+    detailSectionTitles: {
+      deliverablesTitle:
+        settings.detailSectionTitles?.deliverablesTitle ||
+        defaultServicePageSettings.detailSectionTitles.deliverablesTitle,
+      focusPointsTitle:
+        settings.detailSectionTitles?.focusPointsTitle ||
+        defaultServicePageSettings.detailSectionTitles.focusPointsTitle,
+      processFlowTitle:
+        settings.detailSectionTitles?.processFlowTitle ||
+        defaultServicePageSettings.detailSectionTitles.processFlowTitle,
+    },
+    effectiveSolutions: {
+      badge:
+        settings.effectiveSolutions?.badge || defaultServicePageSettings.effectiveSolutions.badge,
+      description:
+        settings.effectiveSolutions?.description ||
+        defaultServicePageSettings.effectiveSolutions.description,
+      readMoreLabel:
+        settings.effectiveSolutions?.readMoreLabel ||
+        defaultServicePageSettings.effectiveSolutions.readMoreLabel,
+      title:
+        settings.effectiveSolutions?.title || defaultServicePageSettings.effectiveSolutions.title,
+    },
+    listCta: {
+      buttonHref: settings.listCta?.buttonHref || defaultServicePageSettings.listCta.buttonHref,
+      buttonLabel:
+        settings.listCta?.buttonLabel || defaultServicePageSettings.listCta.buttonLabel,
+      description:
+        settings.listCta?.description || defaultServicePageSettings.listCta.description,
+      title: settings.listCta?.title || defaultServicePageSettings.listCta.title,
+    },
+    listHero: {
+      badge: settings.listHero?.badge || defaultServicePageSettings.listHero.badge,
+      description:
+        settings.listHero?.description || defaultServicePageSettings.listHero.description,
+      title: settings.listHero?.title || defaultServicePageSettings.listHero.title,
+    },
+    notFound: {
+      buttonLabel:
+        settings.notFound?.buttonLabel || defaultServicePageSettings.notFound.buttonLabel,
+      description:
+        settings.notFound?.description || defaultServicePageSettings.notFound.description,
+      title: settings.notFound?.title || defaultServicePageSettings.notFound.title,
+    },
+    sidebar: {
+      guideCard: {
+        description:
+          settings.sidebar?.guideCard?.description ||
+          defaultServicePageSettings.sidebar.guideCard.description,
+        linkHref:
+          settings.sidebar?.guideCard?.linkHref ||
+          defaultServicePageSettings.sidebar.guideCard.linkHref,
+        linkLabel:
+          settings.sidebar?.guideCard?.linkLabel ||
+          defaultServicePageSettings.sidebar.guideCard.linkLabel,
+        title:
+          settings.sidebar?.guideCard?.title ||
+          defaultServicePageSettings.sidebar.guideCard.title,
+      },
+      questionCard: {
+        ctaHref:
+          settings.sidebar?.questionCard?.ctaHref ||
+          defaultServicePageSettings.sidebar.questionCard.ctaHref,
+        ctaLabel:
+          settings.sidebar?.questionCard?.ctaLabel ||
+          defaultServicePageSettings.sidebar.questionCard.ctaLabel,
+        description:
+          settings.sidebar?.questionCard?.description ||
+          defaultServicePageSettings.sidebar.questionCard.description,
+        phone:
+          settings.sidebar?.questionCard?.phone ||
+          defaultServicePageSettings.sidebar.questionCard.phone,
+        title:
+          settings.sidebar?.questionCard?.title ||
+          defaultServicePageSettings.sidebar.questionCard.title,
+      },
+      servicesLabel:
+        settings.sidebar?.servicesLabel || defaultServicePageSettings.sidebar.servicesLabel,
+    },
+  }
+}
+
+export async function getServicesList(): Promise<ServiceListItem[]> {
+  const services = await queryServices()
+
+  return services.map(mapService)
+}
+
+export async function getServiceBySlug(slug: string | undefined): Promise<ServiceListItem | null> {
+  if (!slug) {
+    return null
+  }
+
+  const services = await getServicesList()
+
+  return services.find((service) => service.slug === slug) || null
+}
+
+export async function getServicePageSettings(): Promise<ServicePageSettingsView> {
+  const settings = await queryServiceSettings()
+
+  return mapSettings(settings)
+}
+
+export async function getServiceDataBundle(): Promise<{
+  services: ServiceListItem[]
+  settings: ServicePageSettingsView
+}> {
+  const [services, settings] = await Promise.all([getServicesList(), getServicePageSettings()])
+
+  return {
+    services,
+    settings,
+  }
 }

@@ -157,9 +157,6 @@ export default function ContactSection() {
 
       const responseData = await response.json().catch(() => null)
 
-      console.log('response', response)
-      console.log('responseData', responseData)
-
       if (!response.ok) {
         throw new Error(responseData?.message || 'Contact request failed')
       }

@@ -1,5 +1,6 @@
 import { motion, type Variants } from 'framer-motion'
-import { services } from '@/lib/services'
+
+import type { ServiceListItem } from '@/lib/services'
 
 const fadeInUp: Variants = {
   hidden: { opacity: 0, y: 40 },
@@ -43,13 +44,15 @@ function AnimatedSection({
   )
 }
 
-export const processSteps = [...services]
-
 interface ProcessTimelineSectionProps {
   id?: string
+  services: ServiceListItem[]
 }
 
-export default function ProcessTimelineSection({ id = 'surec' }: ProcessTimelineSectionProps) {
+export default function ProcessTimelineSection({
+  id = 'surec',
+  services,
+}: ProcessTimelineSectionProps) {
   return (
     <section id={id} className="relative pt-24 bg-gray-light overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">
@@ -88,11 +91,11 @@ export default function ProcessTimelineSection({ id = 'surec' }: ProcessTimeline
             />
 
             <div className="grid grid-cols-4 relative">
-              {processSteps.map((item, index) => {
+              {services.map((item, index) => {
                 const isTop = index % 2 === 0
                 return (
                   <motion.div
-                    key={index}
+                    key={item.slug}
                     variants={fadeInUp}
                     className={`relative flex flex-col items-center ${isTop ? 'pt-0 pb-48' : 'pt-48 pb-0'}`}
                   >
@@ -118,7 +121,7 @@ export default function ProcessTimelineSection({ id = 'surec' }: ProcessTimeline
                       <div className="size-22 bg-gray-light rounded-full rotate-45 flex items-center justify-center shadow-xl shadow-teal/20 ring-4 ring-teal/50 overflow-hidden">
                         <img
                           src={item.image}
-                          alt=""
+                          alt={item.imageAlt || item.title}
                           className="-rotate-45 w-full h-full object-contain drop-shadow-md opacity-90"
                         />
                       </div>
@@ -154,8 +157,8 @@ export default function ProcessTimelineSection({ id = 'surec' }: ProcessTimeline
           />
 
           <AnimatedSection className="space-y-8">
-            {processSteps.map((item, index) => (
-              <motion.div key={index} variants={fadeInUp} className="relative pl-18">
+            {services.map((item, index) => (
+              <motion.div key={item.slug} variants={fadeInUp} className="relative pl-18">
                 <motion.div
                   initial={{ scale: 0 }}
                   whileInView={{ scale: 1 }}
@@ -168,11 +171,7 @@ export default function ProcessTimelineSection({ id = 'surec' }: ProcessTimeline
                   className="absolute left-0 top-6 z-20"
                 >
                   <div className="size-16 bg-gray-light rounded-full flex items-center justify-center text-white font-black text-lg shadow-lg shadow-teal/30 ring-4 ring-teal/50 overflow-hidden">
-                    <img
-                      src={item.image}
-                      alt=""
-                      className="w-full h-full object-contain opacity-90"
-                    />
+                    <img src={item.image} alt={item.imageAlt || item.title} className="w-full h-full object-contain opacity-90" />
                   </div>
                 </motion.div>
 

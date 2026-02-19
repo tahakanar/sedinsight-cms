@@ -55,7 +55,7 @@ export default function ProcessTimelineSection({
 }: ProcessTimelineSectionProps) {
   return (
     <section id={id} className="relative pt-24 bg-gray-light overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">
         <AnimatedSection className="text-center mb-20">
           <motion.span
             variants={fadeInLeft}
@@ -171,7 +171,11 @@ export default function ProcessTimelineSection({
                   className="absolute left-0 top-6 z-20"
                 >
                   <div className="size-16 bg-gray-light rounded-full flex items-center justify-center text-white font-black text-lg shadow-lg shadow-teal/30 ring-4 ring-teal/50 overflow-hidden">
-                    <img src={item.image} alt={item.imageAlt || item.title} className="w-full h-full object-contain opacity-90" />
+                    <img
+                      src={item.image}
+                      alt={item.imageAlt || item.title}
+                      className="w-full h-full object-contain opacity-90"
+                    />
                   </div>
                 </motion.div>
 

@@ -8,6 +8,7 @@ import type { ServiceListItem, ServicePageSettingsView } from '@/lib/services'
 
 import EffectiveSolutionsSection from '../components/EffectiveSolutionsSection'
 import Layout from '../components/Layout'
+import ProcessTimelineSection from '../components/ProcessTimelineSection'
 
 const fadeInLeft: Variants = {
   hidden: { opacity: 0, x: -40 },
@@ -69,7 +70,7 @@ export default function ServicesPageClient({ services, settings }: ServicesPageC
           className="absolute -top-20 -right-20 h-96 w-96 rounded-full bg-teal/20 blur-[120px]"
         />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <AnimatedSection className="text-center max-w-4xl mx-auto">
             <motion.span
               variants={fadeInLeft}
@@ -95,6 +96,7 @@ export default function ServicesPageClient({ services, settings }: ServicesPageC
         labels={settings.effectiveSolutions}
         services={services}
       />
+      {/* <ProcessTimelineSection services={services} /> */}
 
       <section className="relative pt-16 pb-20 bg-navy overflow-hidden">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

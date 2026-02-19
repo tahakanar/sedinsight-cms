@@ -56,7 +56,7 @@ export default function ServiceDetailLayout({
       </section>
 
       <section className="relative py-16 bg-[#f7f9fb]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-[minmax(0,1fr)_340px] gap-10 items-start">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-[minmax(0,1fr)_340px] gap-10 items-start">
           <div>{children}</div>
 
           <aside className="lg:sticky lg:top-24 space-y-6">

@@ -2,7 +2,6 @@
 import { motion, type Variants } from 'framer-motion'
 import { ArrowRight, Binoculars, Circle, Flag, Gem } from 'lucide-react'
 
-import ContactSection from '../components/ContactSection'
 import Layout from '../components/Layout'
 import analizImage from '@/assets/analiz.png'
 import performansImage from '@/assets/performans.png'
@@ -97,7 +96,7 @@ export default function ApproachPage() {
       </section>
 
       <section className="relative py-18 bg-[#e9ecf2]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <AnimatedSection className="text-center">
             <motion.p
               variants={fadeInLeft}
@@ -201,8 +200,6 @@ export default function ApproachPage() {
           </AnimatedSection>
         </div>
       </section>
-
-      <ContactSection />
     </Layout>
   )
 }

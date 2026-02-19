@@ -6,10 +6,10 @@ import type { Service } from '@/payload-types'
 
 const revalidateServicePaths = (slug?: string | null) => {
   revalidatePath('/')
-  revalidatePath('/hizmetler')
+  revalidatePath('/hizmetlerimiz')
 
   if (slug) {
-    revalidatePath(`/hizmetler/${slug}`)
+    revalidatePath(`/hizmetlerimiz/${slug}`)
   }
 }
 

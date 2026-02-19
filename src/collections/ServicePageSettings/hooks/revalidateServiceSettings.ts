@@ -1,8 +1,4 @@
-import type {
-  CollectionAfterChangeHook,
-  CollectionAfterDeleteHook,
-  PayloadRequest,
-} from 'payload'
+import type { CollectionAfterChangeHook, CollectionAfterDeleteHook, PayloadRequest } from 'payload'
 
 import { revalidatePath } from 'next/cache'
 
@@ -29,7 +25,7 @@ const revalidatePublishedServiceDetailPaths = async (req: PayloadRequest) => {
   })
 
   for (const service of services.docs) {
-    revalidatePath(`/hizmetler/${service.slug}`)
+    revalidatePath(`/hizmetlerimiz/${service.slug}`)
   }
 }
 
@@ -47,10 +43,9 @@ export const revalidateServiceSettings: CollectionAfterChangeHook<ServicePageSet
   return doc
 }
 
-export const revalidateServiceSettingsDelete: CollectionAfterDeleteHook<ServicePageSetting> = async ({
-  doc,
-  req,
-}) => {
+export const revalidateServiceSettingsDelete: CollectionAfterDeleteHook<
+  ServicePageSetting
+> = async ({ doc, req }) => {
   if (!req.context.disableRevalidate) {
     revalidateSharedPaths()
     await revalidatePublishedServiceDetailPaths(req)

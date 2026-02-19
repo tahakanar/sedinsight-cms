@@ -194,7 +194,7 @@ const mapService = (service: Service, index: number): ServiceListItem => {
     image: media.url,
     imageAlt: media.alt || service.title,
     intro: service.intro,
-    path: `/hizmetler/${service.slug}`,
+    path: `/hizmetlerimiz/${service.slug}`,
     processFlow: service.processFlow || [],
     slug: service.slug,
     step: String(index + 1).padStart(2, '0'),
@@ -233,10 +233,8 @@ const mapSettings = (settings: ServicePageSetting | null): ServicePageSettingsVi
     },
     listCta: {
       buttonHref: settings.listCta?.buttonHref || defaultServicePageSettings.listCta.buttonHref,
-      buttonLabel:
-        settings.listCta?.buttonLabel || defaultServicePageSettings.listCta.buttonLabel,
-      description:
-        settings.listCta?.description || defaultServicePageSettings.listCta.description,
+      buttonLabel: settings.listCta?.buttonLabel || defaultServicePageSettings.listCta.buttonLabel,
+      description: settings.listCta?.description || defaultServicePageSettings.listCta.description,
       title: settings.listCta?.title || defaultServicePageSettings.listCta.title,
     },
     listHero: {
@@ -264,8 +262,7 @@ const mapSettings = (settings: ServicePageSetting | null): ServicePageSettingsVi
           settings.sidebar?.guideCard?.linkLabel ||
           defaultServicePageSettings.sidebar.guideCard.linkLabel,
         title:
-          settings.sidebar?.guideCard?.title ||
-          defaultServicePageSettings.sidebar.guideCard.title,
+          settings.sidebar?.guideCard?.title || defaultServicePageSettings.sidebar.guideCard.title,
       },
       questionCard: {
         ctaHref:

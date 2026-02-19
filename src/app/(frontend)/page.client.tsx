@@ -182,7 +182,7 @@ export default function HomeClient({ effectiveSolutions, services }: HomeClientP
           />
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-22 pb-20 w-full">
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-22 pb-20 w-full">
           <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center min-h-[80vh]">
             {/* Left Content - 7 columns */}
             <motion.div
@@ -275,17 +275,9 @@ export default function HomeClient({ effectiveSolutions, services }: HomeClientP
                   whileTap={{ scale: 0.98 }}
                   className="group px-8 py-5 bg-teal text-white text-lg font-bold rounded-full shadow-2xl shadow-teal/30 hover:shadow-teal/50 transition-all flex items-center justify-center gap-3 relative overflow-hidden"
                 >
-                  <span className="relative z-10">Hemen Başlayalım</span>
+                  <span className="relative z-10">Görüşme Planla</span>
                   <ArrowRight className="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform" />
                   <div className="absolute inset-0 bg-linear-to-r from-teal to-teal/80 opacity-0 group-hover:opacity-100 transition-opacity" />
-                </motion.button>
-                <motion.button
-                  onClick={() => scrollToSection('#surec')}
-                  whileHover={{ scale: 1.02, y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="px-8 py-5 bg-white/5 backdrop-blur-sm text-white text-lg font-bold rounded-full border border-white/20 hover:bg-white/10 hover:border-white/30 transition-all flex items-center justify-center gap-3"
-                >
-                  Nasıl Çalışıyoruz?
                 </motion.button>
               </motion.div>
             </motion.div>
@@ -390,7 +382,7 @@ export default function HomeClient({ effectiveSolutions, services }: HomeClientP
 
       {/* FAQ CTA Section */}
       <section className="relative pt-16 bg-navy overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pb-10">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pb-10">
           <div className="flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left">
             <div>
               <h3 className="font-['Bricolage_Grotesque'] text-3xl sm:text-4xl font-black text-white mb-3 tracking-tight">
@@ -414,7 +406,7 @@ export default function HomeClient({ effectiveSolutions, services }: HomeClientP
 
       {/* Target Audience Section */}
       <section className="relative pt-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <AnimatedSection className="text-center mb-24">
             <motion.span
               variants={fadeInLeft}
@@ -439,20 +431,47 @@ export default function HomeClient({ effectiveSolutions, services }: HomeClientP
             </motion.p>
           </AnimatedSection>
 
-          <AnimatedSection className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-            {targetAudience.map((item, index) => (
-              <motion.div
-                key={index}
-                variants={fadeInUp}
-                whileHover={{ y: -5 }}
-                className="p-6 bg-gray-light rounded-2xl text-center"
-              >
-                <div className="size-40 rounded-2xl flex items-center justify-center mx-auto mb-6 overflow-hidden p-2">
-                  <Image src={item.image} alt="" className="w-full h-full object-contain" />
-                </div>
-                <p className="text-gray-dark font-medium leading-tight">{item.text}</p>
-              </motion.div>
-            ))}
+          <AnimatedSection className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 py-12">
+            {targetAudience.map((item, index) => {
+              return (
+                <motion.div
+                  key={index}
+                  variants={fadeInUp}
+                  className="relative bg-white rounded-bl-none rounded-tr-none rounded-br-[30px] p-8 pt-14 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] transition-all duration-500  hover:shadow-[0_20px_50px_-10px_rgba(0,96,100,0.15)] group mt-10 lg:mt-0"
+                >
+                  {/* Number Watermark */}
+                  <div className="absolute top-6 right-8 text-5xl font-black text-teal/20 transition-all duration-500 group-hover:text-teal/40 group-hover:text-6xl group-hover:-translate-y-1 font-['Bricolage_Grotesque']">
+                    {String(index + 1).padStart(2, '0')}
+                  </div>
+
+                  {/* Overlapping Icon Circle */}
+                  <div className="absolute -top-10 -left-6 size-25">
+                    {/* Decorative Border Ring (Offset to top-right) */}
+                    <div className="absolute z-20 inset-0 rounded-full border-[3px] border-navy translate-x-2 -translate-y-2 transition-transform duration-500 group-hover:translate-x-0 group-hover:translate-y-0" />
+
+                    {/* Main Icon Background */}
+                    <div className="absolute inset-0 bg-teal rounded-full flex items-center justify-center p-2 shadow-lg z-10 transition-transform duration-500 ease-out">
+                      <div className="w-full h-full relative">
+                        <Image
+                          src={item.image}
+                          alt="icons"
+                          className="size-20"
+                          width={80}
+                          height={80}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Content */}
+                  <div className="relative z-10 mt-4 pt-5">
+                    <p className="text-gray-dark leading-relaxed font-medium sm:text-lg">
+                      {item.text}
+                    </p>
+                  </div>
+                </motion.div>
+              )
+            })}
           </AnimatedSection>
         </div>
       </section>

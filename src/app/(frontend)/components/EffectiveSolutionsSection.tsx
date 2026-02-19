@@ -27,8 +27,11 @@ export default function EffectiveSolutionsSection({
   void waveColor
 
   return (
-    <section id={id} className="relative pt-24 bg-[#e9ecf2] overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-14">
+    <section
+      id={id}
+      className="relative pt-24 bg-linear-to-b from-white  to-[#e9ecf2] overflow-hidden"
+    >
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-14">
         <div className="text-center max-w-4xl mx-auto">
           <span className="text-teal text-sm sm:text-base font-bold tracking-[0.22em] uppercase">
             {labels.badge}
@@ -39,52 +42,66 @@ export default function EffectiveSolutionsSection({
           <p className="mt-6 text-lg text-gray-dark/70 leading-relaxed">{labels.description}</p>
         </div>
 
-        <div className="mt-14 grid gap-6 md:grid-cols-2">
-          {services.map((item) => (
-            <article
-              key={item.slug}
-              className="group relative overflow-hidden rounded-2xl bg-white shadow-[0_14px_34px_rgba(15,42,68,0.08)]"
-            >
-              <div className="relative h-56 overflow-hidden">
-                <img
-                  src={item.image}
-                  alt={item.imageAlt || item.title}
-                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-navy/20 transition-opacity duration-300 group-hover:opacity-0" />
-                <div className="absolute inset-0 bg-linear-to-t from-navy/85 via-navy/45 to-transparent translate-y-full transition-transform duration-500 group-hover:translate-y-0" />
-              </div>
+        <div className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {services.map((item, index) => {
+            const isFeatured = index === 3
 
-              <div className="relative p-7 overflow-hidden">
-                <div className="absolute inset-0 bg-teal translate-y-full transition-transform duration-500 group-hover:translate-y-0" />
-                <div className="relative z-10">
-                  <div className="flex items-center justify-between mb-5">
-                    <div className="inline-flex size-12 items-center justify-center rounded-xl bg-teal/12 text-teal transition-colors duration-300 group-hover:bg-white/15 group-hover:text-white">
-                      <ThumbsUp className="size-6" />
-                    </div>
-                    <span className="text-gray-dark/30 text-4xl font-black transition-colors duration-300 group-hover:text-white/25">
-                      {item.step}
-                    </span>
-                  </div>
-
-                  <h3 className="text-2xl font-black text-navy transition-colors duration-300 group-hover:text-white">
-                    {item.title}
-                  </h3>
-                  <p className="mt-4 text-gray text-lg leading-relaxed transition-colors duration-300 group-hover:text-white/85 h-15">
-                    {item.description}
-                  </p>
-
-                  <Link
-                    href={item.path}
-                    className="mt-6 inline-flex items-center gap-2 text-lg font-bold text-navy transition-colors duration-300 group-hover:text-white"
-                  >
-                    {labels.readMoreLabel}
-                    <ArrowRight className="size-5 transition-transform duration-300 group-hover:translate-x-1" />
-                  </Link>
+            return (
+              <article
+                key={item.slug}
+                className={`group relative overflow-hidden rounded-2xl bg-white shadow-[0_14px_34px_rgba(15,42,68,0.08)] flex flex-col ${
+                  isFeatured ? 'md:col-span-2 lg:col-span-3 lg:flex-row' : ''
+                }`}
+              >
+                <div
+                  className={`relative overflow-hidden shrink-0 ${isFeatured ? 'h-64 lg:h-auto lg:w-1/2' : 'h-56'}`}
+                >
+                  <img
+                    src={item.image}
+                    alt={item.imageAlt || item.title}
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-navy/20 transition-opacity duration-300 group-hover:opacity-0" />
+                  <div className="absolute inset-0 bg-linear-to-t from-navy/85 via-navy/45 to-transparent translate-y-full transition-transform duration-500 group-hover:translate-y-0" />
                 </div>
-              </div>
-            </article>
-          ))}
+
+                <div
+                  className={`relative p-7 overflow-hidden flex flex-col flex-1 ${isFeatured ? 'lg:w-1/2 lg:p-12 lg:justify-center' : ''}`}
+                >
+                  <div className="absolute inset-0 bg-teal translate-y-full transition-transform duration-500 group-hover:translate-y-0" />
+                  <div className="relative z-10">
+                    <div className="flex items-center justify-between mb-5">
+                      <div className="inline-flex size-12 items-center justify-center rounded-xl bg-teal/12 text-teal transition-colors duration-300 group-hover:bg-white/15 group-hover:text-white">
+                        <ThumbsUp className="size-6" />
+                      </div>
+                      <span className="text-gray-dark/30 text-4xl font-black transition-colors duration-300 group-hover:text-white/25">
+                        {item.step}
+                      </span>
+                    </div>
+
+                    <h3
+                      className={`font-black text-navy transition-colors duration-300 group-hover:text-white ${isFeatured ? 'text-3xl lg:text-4xl' : 'text-2xl'}`}
+                    >
+                      {item.title}
+                    </h3>
+                    <p
+                      className={`mt-4 text-gray text-lg leading-relaxed transition-colors duration-300 group-hover:text-white/85 ${isFeatured ? '' : 'h-15'}`}
+                    >
+                      {item.description}
+                    </p>
+
+                    <Link
+                      href={item.path}
+                      className="mt-6 inline-flex items-center gap-2 text-lg font-bold text-navy transition-colors duration-300 group-hover:text-white"
+                    >
+                      {labels.readMoreLabel}
+                      <ArrowRight className="size-5 transition-transform duration-300 group-hover:translate-x-1" />
+                    </Link>
+                  </div>
+                </div>
+              </article>
+            )
+          })}
         </div>
       </div>
     </section>

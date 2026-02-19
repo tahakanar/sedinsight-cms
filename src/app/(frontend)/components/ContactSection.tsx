@@ -1,13 +1,22 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { AnimatePresence, m, motion, type Variants } from 'framer-motion'
-import { CheckCircle2, CircleAlert, X } from 'lucide-react'
+import { AnimatePresence, motion, type Variants } from 'framer-motion'
+import {
+  CheckCircle2,
+  CircleAlert,
+  X,
+  User,
+  Building2,
+  Mail,
+  Phone,
+  ArrowRight,
+  Sparkles,
+} from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Controller, type SubmitHandler, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import {
   Select,
@@ -18,16 +27,16 @@ import {
 } from '@/components/ui/select'
 
 const fadeInUp: Variants = {
-  hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0 },
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
 }
 
 const fadeInLeft: Variants = {
-  hidden: { opacity: 0, x: -60 },
+  hidden: { opacity: 0, x: -40 },
   visible: {
     opacity: 1,
     x: 0,
-    transition: { duration: 1.2, ease: 'easeOut' },
+    transition: { duration: 0.8, ease: 'easeOut' },
   },
 }
 
@@ -122,7 +131,15 @@ type ContactModalState = {
 
 function ErrorText({ message }: { message?: string }) {
   if (!message) return null
-  return <p className="mt-2 text-sm font-medium text-[#7f1d1d]">{message}</p>
+  return (
+    <motion.p
+      initial={{ opacity: 0, height: 0 }}
+      animate={{ opacity: 1, height: 'auto' }}
+      className="mt-1.5 text-[13px] font-medium text-rose-500"
+    >
+      {message}
+    </motion.p>
+  )
 }
 
 export default function ContactSection() {
@@ -163,17 +180,17 @@ export default function ContactSection() {
 
       setModalState({
         tone: 'success',
-        title: 'Talebiniz Alindi',
+        title: 'Talebiniz Alındı',
         description:
-          'Ekibimiz en kisa surede sizinle iletisime gececek. Ilginiz icin tesekkur ederiz.',
+          'Ekibimiz en kısa sürede sizinle iletişime geçecek. İlginiz için teşekkür ederiz.',
       })
       reset()
     } catch (error) {
       console.error(error)
       setModalState({
         tone: 'error',
-        title: 'Gonderim Basarisiz',
-        description: 'Talebiniz gonderilemedi. Lutfen tekrar deneyin.',
+        title: 'Gönderim Başarısız',
+        description: 'Talebiniz gönderilemedi. Lütfen tekrar deneyin.',
       })
     }
   }
@@ -200,191 +217,262 @@ export default function ContactSection() {
 
   return (
     <>
-      <section id="iletisim" className="relative pt-24 bg-[#e7f4f5] overflow-hidden">
-        <div
-          className="absolute inset-0 opacity-10 pointer-events-none"
-          style={{
-            backgroundImage: 'radial-gradient(#006064 1px, transparent 1px)',
-            backgroundSize: '20px 20px',
-          }}
-        />
+      <section id="iletisim" className="relative py-24 bg-slate-50 overflow-hidden">
+        {/* Premium Background Elements */}
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+          <div className="absolute -top-[20%] -right-[10%] w-[70%] h-[70%] rounded-full bg-linear-to-br from-[#006064]/10 to-transparent blur-3xl" />
+          <div className="absolute -bottom-[20%] -left-[10%] w-[60%] h-[60%] rounded-full bg-linear-to-tr from-[#006064]/5 to-transparent blur-3xl" />
+        </div>
 
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <AnimatedSection className="text-center mb-16 space-y-4">
-            <motion.h2
-              variants={fadeInLeft}
-              className="font-['Bricolage_Grotesque'] text-4xl sm:text-6xl font-black text-[#006064] tracking-tight"
-            >
-              Hadi Tanışalım!
-            </motion.h2>
-            <motion.p
-              variants={fadeInLeft}
-              className="text-[#006064]/80 text-lg max-w-2xl mx-auto font-medium"
-            >
-              Bize ulaşın, işletmenizi dijital dünyada bir adım öne taşıyacak o planı birlikte
-              kuralım.
-            </motion.p>
-          </AnimatedSection>
+          <div className="grid lg:grid-cols-2 gap-16 lg:gap-8 items-start">
+            {/* Left Column: Copy & Contact Info */}
+            <AnimatedSection className="max-w-xl lg:sticky lg:top-32 lg:pb-12">
+              <motion.div variants={fadeInLeft} className="space-y-8">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-[#006064]/10 shadow-sm">
+                  <Sparkles className="w-4 h-4 text-[#006064]" />
+                  <span className="text-sm font-bold text-[#006064]">İletişime Geçin</span>
+                </div>
 
-          <AnimatedSection>
-            <form onSubmit={handleSubmit(onSubmit)} className="max-w-5xl mx-auto pb-10" noValidate>
-              <div className="grid lg:grid-cols-2 gap-8 mb-10">
-                <motion.div variants={fadeInUp}>
-                  <label htmlFor="fullName" className="block text-sm font-bold text-[#006064] mb-2">
-                    Ad Soyad *
-                  </label>
-                  <Input
-                    id="fullName"
-                    type="text"
-                    aria-invalid={Boolean(errors.fullName)}
-                    {...register('fullName')}
-                    className="h-12 w-full rounded-2xl border-[#006064]/25 bg-white/70 px-4 text-[#0f2a44] font-semibold focus-visible:border-[#006064] focus-visible:ring-[#006064]/20"
-                  />
-                  <ErrorText message={errors.fullName?.message} />
-                </motion.div>
+                <h2 className="font-['Bricolage_Grotesque'] text-4xl sm:text-5xl lg:text-6xl font-black text-navy tracking-tight leading-[1.1]">
+                  Hadi <span className="text-teal">Tanışalım!</span>
+                </h2>
 
-                <motion.div variants={fadeInUp}>
-                  <label
-                    htmlFor="companyName"
-                    className="block text-sm font-bold text-[#006064] mb-2"
+                <p className="text-slate-600 text-lg leading-relaxed font-medium">
+                  Bize ulaşın, işletmenizi dijital dünyada bir adım öne taşıyacak o planı birlikte
+                  kuralım. Uzman ekibimiz size özel çözümler sunmak için hazır.
+                </p>
+
+                <div className="space-y-6 pt-8 border-t border-slate-200/60">
+                  <a
+                    href="tel:+905555555555"
+                    className="group flex items-center gap-5 p-4 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md hover:border-[#006064]/20 transition-all"
                   >
-                    Şirket / İşletme Adı *
-                  </label>
-                  <Input
-                    id="companyName"
-                    type="text"
-                    aria-invalid={Boolean(errors.companyName)}
-                    {...register('companyName')}
-                    className="h-12 w-full rounded-2xl border-[#006064]/25 bg-white/70 px-4 text-[#0f2a44] font-semibold focus-visible:border-[#006064] focus-visible:ring-[#006064]/20"
-                  />
-                  <ErrorText message={errors.companyName?.message} />
-                </motion.div>
-
-                <motion.div variants={fadeInUp}>
-                  <label htmlFor="email" className="block text-sm font-bold text-[#006064] mb-2">
-                    E-posta *
-                  </label>
-                  <Input
-                    id="email"
-                    type="email"
-                    aria-invalid={Boolean(errors.email)}
-                    {...register('email')}
-                    className="h-12 w-full rounded-2xl border-[#006064]/25 bg-white/70 px-4 text-[#0f2a44] font-semibold focus-visible:border-[#006064] focus-visible:ring-[#006064]/20"
-                  />
-                  <ErrorText message={errors.email?.message} />
-                </motion.div>
-
-                <motion.div variants={fadeInUp}>
-                  <label htmlFor="phone" className="block text-sm font-bold text-[#006064] mb-2">
-                    Telefon *
-                  </label>
-                  <Input
-                    id="phone"
-                    type="tel"
-                    aria-invalid={Boolean(errors.phone)}
-                    {...register('phone')}
-                    className="h-12 w-full rounded-2xl border-[#006064]/25 bg-white/70 px-4 text-[#0f2a44] font-semibold focus-visible:border-[#006064] focus-visible:ring-[#006064]/20"
-                  />
-                  <ErrorText message={errors.phone?.message} />
-                </motion.div>
-              </div>
-
-              <motion.div variants={fadeInUp} className="mb-10">
-                <label htmlFor="sector" className="block text-sm font-bold text-[#006064] mb-2">
-                  Sektör *
-                </label>
-                <Controller
-                  name="sector"
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                      name={field.name}
-                      value={field.value || undefined}
-                      onValueChange={field.onChange}
-                    >
-                      <SelectTrigger
-                        id="sector"
-                        aria-invalid={Boolean(errors.sector)}
-                        className="h-12 w-full rounded-2xl border-[#006064]/25 bg-white/70 px-4 text-[#0f2a44] font-semibold focus-visible:border-[#006064] focus-visible:ring-[#006064]/20 data-placeholder:text-[#0f2a44]/50"
-                      >
-                        <SelectValue placeholder="Sektör seçiniz" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {sectorOptions.map((option) => (
-                          <SelectItem key={option} value={option}>
-                            {option}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
-                <ErrorText message={errors.sector?.message} />
-              </motion.div>
-
-              <motion.fieldset
-                variants={fadeInUp}
-                className="mb-12 rounded-3xl border border-[#006064]/20 bg-white/50 p-6"
-              >
-                <legend className="px-2 text-sm font-bold text-[#006064]">
-                  Destek Almak İstediğiniz Konu? *
-                </legend>
-                <Controller
-                  name="supportTopics"
-                  control={control}
-                  render={({ field }) => (
-                    <div className="grid sm:grid-cols-2 gap-3 mt-2">
-                      {supportTopicOptions.map((topic) => {
-                        const selectedTopics = field.value ?? []
-                        const checked = selectedTopics.includes(topic)
-
-                        return (
-                          <label
-                            key={topic}
-                            className="flex items-center gap-3 rounded-xl bg-white/70 px-4 py-3 border border-[#006064]/15 cursor-pointer hover:border-[#006064]/40 transition-colors"
-                          >
-                            <Checkbox
-                              checked={checked}
-                              aria-invalid={Boolean(errors.supportTopics)}
-                              onCheckedChange={(nextChecked) => {
-                                const isChecked = nextChecked === true
-                                if (isChecked && !selectedTopics.includes(topic)) {
-                                  field.onChange([...selectedTopics, topic])
-                                  return
-                                }
-                                if (!isChecked) {
-                                  field.onChange(selectedTopics.filter((value) => value !== topic))
-                                }
-                              }}
-                              className="border-[#006064]/40 data-[state=checked]:bg-[#006064] data-[state=checked]:border-[#006064]"
-                            />
-                            <span className="text-sm font-medium text-[#0f2a44]">{topic}</span>
-                          </label>
-                        )
-                      })}
+                    <div className="shrink-0 w-14 h-14 flex items-center justify-center rounded-xl bg-[#006064]/5 text-[#006064] group-hover:bg-[#006064] group-hover:text-white transition-colors">
+                      <Phone className="w-6 h-6" />
                     </div>
-                  )}
-                />
-                <ErrorText message={errors.supportTopics?.message} />
-              </motion.fieldset>
+                    <div>
+                      <h4 className="text-sm font-bold text-slate-500 mb-1">Bizi Arayın</h4>
+                      <div className="text-slate-900 text-lg font-bold group-hover:text-[#006064] transition-colors">
+                        +90 555 555 55 55
+                      </div>
+                    </div>
+                  </a>
 
-              <motion.div variants={fadeInUp} className="flex flex-col items-center gap-6">
-                <Button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="h-auto rounded-full bg-[#006064] px-8 py-3 text-white font-bold tracking-wide hover:bg-[#0b7b7f]"
-                >
-                  Talep Gönder
-                </Button>
-                <div className="text-[#006064] font-bold mt-2 opacity-70">
-                  Ya da bizi arayın:{' '}
-                  <a href="tel:+905555555555" className="hover:underline">
-                    +90 555 555 55 55
+                  <a
+                    href="mailto:info@sedinsight.com"
+                    className="group flex items-center gap-5 p-4 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md hover:border-[#006064]/20 transition-all"
+                  >
+                    <div className="shrink-0 w-14 h-14 flex items-center justify-center rounded-xl bg-[#006064]/5 text-[#006064] group-hover:bg-[#006064] group-hover:text-white transition-colors">
+                      <Mail className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-bold text-slate-500 mb-1">E-posta Gönderin</h4>
+                      <div className="text-slate-900 text-lg font-bold group-hover:text-[#006064] transition-colors">
+                        info@sedinsight.com
+                      </div>
+                    </div>
                   </a>
                 </div>
               </motion.div>
-            </form>
-          </AnimatedSection>
+            </AnimatedSection>
+
+            {/* Right Column: Form */}
+            <AnimatedSection>
+              <motion.div
+                variants={fadeInUp}
+                className="bg-white rounded-4xl shadow-[0_8px_40px_-12px_rgba(0,0,0,0.1)] border border-slate-100 p-6 sm:p-10 relative overflow-hidden"
+              >
+                {/* Decorative subtle line top */}
+                <div className="absolute top-0 left-0 w-full h-1.5 bg-linear-to-r from-[#006064] via-[#20c8cd] to-[#006064]" />
+
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-8" noValidate>
+                  <div className="grid sm:grid-cols-2 gap-6">
+                    {/* Full Name */}
+                    <div className="space-y-2.5">
+                      <label htmlFor="fullName" className="text-sm font-bold text-slate-700">
+                        Ad Soyad
+                      </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+                          <User className="h-5 w-5" />
+                        </div>
+                        <Input
+                          id="fullName"
+                          {...register('fullName')}
+                          className="pl-11 h-14 bg-slate-50/50 border-slate-200 hover:border-[#006064]/30 focus:border-[#006064] focus:ring-[#006064]/10 transition-all rounded-xl shadow-sm text-slate-900 font-medium"
+                          placeholder="Ahmet Yılmaz"
+                          aria-invalid={Boolean(errors.fullName)}
+                        />
+                      </div>
+                      <ErrorText message={errors.fullName?.message} />
+                    </div>
+
+                    {/* Company Name */}
+                    <div className="space-y-2.5">
+                      <label htmlFor="companyName" className="text-sm font-bold text-slate-700">
+                        Şirket / İşletme Adı
+                      </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+                          <Building2 className="h-5 w-5" />
+                        </div>
+                        <Input
+                          id="companyName"
+                          {...register('companyName')}
+                          className="pl-11 h-14 bg-slate-50/50 border-slate-200 hover:border-[#006064]/30 focus:border-[#006064] focus:ring-[#006064]/10 transition-all rounded-xl shadow-sm text-slate-900 font-medium"
+                          placeholder="Şirket A.Ş."
+                          aria-invalid={Boolean(errors.companyName)}
+                        />
+                      </div>
+                      <ErrorText message={errors.companyName?.message} />
+                    </div>
+
+                    {/* Email */}
+                    <div className="space-y-2.5">
+                      <label htmlFor="email" className="text-sm font-bold text-slate-700">
+                        E-posta
+                      </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+                          <Mail className="h-5 w-5" />
+                        </div>
+                        <Input
+                          id="email"
+                          type="email"
+                          {...register('email')}
+                          className="pl-11 h-14 bg-slate-50/50 border-slate-200 hover:border-[#006064]/30 focus:border-[#006064] focus:ring-[#006064]/10 transition-all rounded-xl shadow-sm text-slate-900 font-medium"
+                          placeholder="ornek@sirket.com"
+                          aria-invalid={Boolean(errors.email)}
+                        />
+                      </div>
+                      <ErrorText message={errors.email?.message} />
+                    </div>
+
+                    {/* Phone */}
+                    <div className="space-y-2.5">
+                      <label htmlFor="phone" className="text-sm font-bold text-slate-700">
+                        Telefon
+                      </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+                          <Phone className="h-5 w-5" />
+                        </div>
+                        <Input
+                          id="phone"
+                          type="tel"
+                          {...register('phone')}
+                          className="pl-11 h-14 bg-slate-50/50 border-slate-200 hover:border-[#006064]/30 focus:border-[#006064] focus:ring-[#006064]/10 transition-all rounded-xl shadow-sm text-slate-900 font-medium"
+                          placeholder="+90 555 555 55 55"
+                          aria-invalid={Boolean(errors.phone)}
+                        />
+                      </div>
+                      <ErrorText message={errors.phone?.message} />
+                    </div>
+                  </div>
+
+                  {/* Sector */}
+                  <div className="space-y-2.5">
+                    <label htmlFor="sector" className="text-sm font-bold text-slate-700">
+                      Sektör
+                    </label>
+                    <Controller
+                      name="sector"
+                      control={control}
+                      render={({ field }) => (
+                        <Select
+                          name={field.name}
+                          value={field.value || undefined}
+                          onValueChange={field.onChange}
+                        >
+                          <SelectTrigger
+                            id="sector"
+                            aria-invalid={Boolean(errors.sector)}
+                            className="h-14 bg-slate-50/50 border-slate-200 hover:border-[#006064]/30 focus:border-[#006064] focus:ring-[#006064]/10 transition-all rounded-xl shadow-sm text-slate-900 font-medium data-placeholder:text-slate-400"
+                          >
+                            <SelectValue placeholder="Sektör seçiniz" />
+                          </SelectTrigger>
+                          <SelectContent className="rounded-xl border-slate-100 shadow-xl">
+                            {sectorOptions.map((option) => (
+                              <SelectItem
+                                key={option}
+                                value={option}
+                                className="rounded-lg cursor-pointer focus:bg-[#006064]/5 focus:text-[#006064] font-medium"
+                              >
+                                {option}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      )}
+                    />
+                    <ErrorText message={errors.sector?.message} />
+                  </div>
+
+                  {/* Support Topics (Pills) */}
+                  <div className="space-y-3">
+                    <label className="text-sm font-bold text-slate-700">
+                      Destek Almak İstediğiniz Konu?
+                    </label>
+                    <Controller
+                      name="supportTopics"
+                      control={control}
+                      render={({ field }) => (
+                        <div className="flex flex-wrap gap-2.5">
+                          {supportTopicOptions.map((topic) => {
+                            const selectedTopics = field.value ?? []
+                            const isSelected = selectedTopics.includes(topic)
+
+                            return (
+                              <button
+                                key={topic}
+                                type="button"
+                                onClick={() => {
+                                  if (isSelected) {
+                                    field.onChange(selectedTopics.filter((t) => t !== topic))
+                                  } else {
+                                    field.onChange([...selectedTopics, topic])
+                                  }
+                                }}
+                                className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 border ${
+                                  isSelected
+                                    ? 'bg-[#006064] border-[#006064] text-white shadow-md shadow-[#006064]/20'
+                                    : 'bg-white border-slate-200 text-slate-600 hover:border-[#006064]/30 hover:bg-slate-50'
+                                }`}
+                              >
+                                {topic}
+                              </button>
+                            )
+                          })}
+                        </div>
+                      )}
+                    />
+                    <ErrorText message={errors.supportTopics?.message} />
+                  </div>
+
+                  <div className="pt-2">
+                    <Button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="w-full h-14 text-base font-bold text-white bg-linear-to-r from-navy to-teal hover:from-navy/50 hover:to-teal/70 rounded-xl shadow-lg shadow-[#006064]/25 transition-all duration-300 disabled:opacity-70 group"
+                    >
+                      {isSubmitting ? (
+                        <span className="flex items-center gap-3">
+                          <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                          Gönderiliyor...
+                        </span>
+                      ) : (
+                        <span className="flex items-center justify-center gap-2">
+                          Talebi Gönder
+                          <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                        </span>
+                      )}
+                    </Button>
+                  </div>
+                </form>
+              </motion.div>
+            </AnimatedSection>
+          </div>
         </div>
       </section>
 
@@ -400,7 +488,7 @@ export default function ContactSection() {
               type="button"
               aria-label="Modali kapat"
               onClick={() => setModalState(null)}
-              className="absolute inset-0 bg-[#001b1f]/45 backdrop-blur-sm"
+              className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -411,47 +499,47 @@ export default function ContactSection() {
               aria-modal="true"
               aria-labelledby="contact-modal-title"
               aria-describedby="contact-modal-description"
-              className="relative w-full max-w-md overflow-hidden rounded-3xl border border-white/50 bg-white shadow-[0_28px_80px_-30px_rgba(0,96,100,0.55)]"
+              className="relative w-full max-w-md overflow-hidden rounded-4xl border border-white/50 bg-white shadow-2xl"
               initial={{ opacity: 0, y: 24, scale: 0.96 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 16, scale: 0.98 }}
               transition={{ duration: 0.22, ease: 'easeOut' }}
             >
-              <div className="pointer-events-none absolute -top-12 -right-12 size-36 rounded-full bg-[#20c8cd]/30 blur-2xl" />
-              <div className="pointer-events-none absolute -bottom-16 -left-14 size-44 rounded-full bg-[#006064]/20 blur-2xl" />
+              <div className="pointer-events-none absolute -top-12 -right-12 size-40 rounded-full bg-slate-50 blur-2xl" />
+              <div className="pointer-events-none absolute -bottom-16 -left-14 size-48 rounded-full bg-[#006064]/5 blur-2xl" />
 
               <button
                 type="button"
                 onClick={() => setModalState(null)}
-                className="absolute right-4 top-4 inline-flex size-8 items-center justify-center rounded-full bg-white/80 text-[#006064] transition-colors hover:bg-white"
+                className="absolute right-4 top-4 z-10 inline-flex size-8 items-center justify-center rounded-full bg-slate-100 text-slate-500 transition-colors hover:bg-slate-200 hover:text-slate-900"
               >
                 <X className="size-4" />
               </button>
 
-              <div className="relative px-7 pb-7 pt-10 text-center">
+              <div className="relative px-8 pb-8 pt-12 text-center">
                 <div
-                  className={`mx-auto mb-5 flex size-16 items-center justify-center rounded-2xl shadow-lg ${
+                  className={`mx-auto mb-6 flex size-16 items-center justify-center rounded-2xl shadow-lg ${
                     modalState.tone === 'success'
-                      ? 'bg-[#006064] shadow-[#006064]/35'
-                      : 'bg-[#b42318] shadow-[#b42318]/35'
+                      ? 'bg-emerald-50 text-emerald-600 shadow-emerald-500/10 border border-emerald-100'
+                      : 'bg-rose-50 text-rose-600 shadow-rose-500/10 border border-rose-100'
                   }`}
                 >
                   {modalState.tone === 'success' ? (
-                    <CheckCircle2 className="size-8 text-white" />
+                    <CheckCircle2 className="size-8" />
                   ) : (
-                    <CircleAlert className="size-8 text-white" />
+                    <CircleAlert className="size-8" />
                   )}
                 </div>
 
                 <h3
                   id="contact-modal-title"
-                  className="text-2xl font-['Bricolage_Grotesque'] font-extrabold tracking-tight text-[#00333a]"
+                  className="text-2xl font-['Bricolage_Grotesque'] font-black tracking-tight text-slate-900"
                 >
                   {modalState.title}
                 </h3>
                 <p
                   id="contact-modal-description"
-                  className="mt-3 text-[15px] leading-relaxed font-medium text-[#0b5d68]/85"
+                  className="mt-3 text-[15px] leading-relaxed font-medium text-slate-600"
                 >
                   {modalState.description}
                 </p>
@@ -459,7 +547,7 @@ export default function ContactSection() {
                 <Button
                   type="button"
                   onClick={() => setModalState(null)}
-                  className="mt-7 h-auto rounded-full bg-[#006064] px-7 py-2.5 text-white font-bold hover:bg-[#0b7b7f]"
+                  className="mt-8 w-full h-12 rounded-xl bg-slate-900 text-white font-bold hover:bg-slate-800 transition-colors"
                 >
                   Tamam
                 </Button>

@@ -50,7 +50,7 @@ export default function Testimonials() {
             transition={{ duration: 0.8 }}
           >
             <h2 className="font-['Bricolage_Grotesque'] text-4xl sm:text-5xl lg:text-6xl font-bold text-navy leading-tight mb-10">
-              "{FEATURED_TESTIMONIAL.text}"
+              &quot;{FEATURED_TESTIMONIAL.text}&quot;
             </h2>
 
             <div className="flex flex-col items-center justify-center gap-4">
@@ -93,7 +93,7 @@ export default function Testimonials() {
                 className="w-87.5 p-8 rounded-3xl bg-gray-light border border-gray-200/50 hover:shadow-xl transition-shadow duration-300"
               >
                 <p className="text-navy/80 text-lg font-medium leading-relaxed mb-6">
-                  "{item.text}"
+                  &quot;{item.text}&quot;
                 </p>
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-200 shrink-0">

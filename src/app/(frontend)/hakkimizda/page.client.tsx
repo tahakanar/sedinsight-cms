@@ -5,6 +5,9 @@ import { ArrowRight, CheckCircle, Target, Users, Zap, Award, Lightbulb } from 'l
 import Image from 'next/image'
 import Link from 'next/link'
 import Layout from '../components/Layout'
+import type { AboutUs } from '@/payload-types'
+import type { Media } from '@/payload-types'
+import { getMediaUrl } from '@/utilities/getMediaUrl'
 
 // Import assets (using placeholders that should exist or be replaced)
 import avatarImg from '@/assets/avatar.png'
@@ -49,37 +52,36 @@ function AnimatedSection({
   )
 }
 
-const features = [
-  {
-    title: 'İnovatif Çözümler',
-    description: 'En son teknolojileri kullanarak işletmenize özel dijital çözümler üretiyoruz.',
-    icon: Lightbulb,
-  },
-  {
-    title: 'Uzman Kadro',
-    description: 'Alanında deneyimli profesyonellerden oluşan ekibimizle yanınızdayız.',
-    icon: Users,
-  },
-  {
-    title: 'Hızlı Uygulama',
-    description: 'Projelerinizi söz verdiğimiz sürede, en yüksek kalitede teslim ediyoruz.',
-    icon: Zap,
-  },
-  {
-    title: 'Garantili Başarı',
-    description: 'Ölçülebilir sonuçlar ve sürekli optimizasyon ile başarıyı garantiliyoruz.',
-    icon: Award,
-  },
-]
+// Icon mapping
+const iconMap = {
+  lightbulb: Lightbulb,
+  users: Users,
+  zap: Zap,
+  award: Award,
+  target: Target,
+  checkCircle: CheckCircle,
+}
 
-const stats = [
-  { value: '50+', label: 'Tamamlanan Proje' },
-  { value: '%99', label: 'Müşteri Memnuniyeti' },
-  { value: '10+', label: 'Uzman Personel' },
-  { value: '5+', label: 'Yıllık Tecrübe' },
-]
+export default function AboutUsPageClient({ data }: { data: AboutUs }) {
+  // Prepare data with defaults
 
-export default function AboutUsPageClient() {
+  console.log('data', data)
+
+  const hero = data?.hero || {}
+  const whoWeAre = data?.whoWeAre || {}
+  const stats = data?.stats || []
+  const whyChooseUs = data?.whyChooseUs || {}
+  const features = whyChooseUs?.features || []
+
+  // Get image URL
+  const getImageUrl = () => {
+    const image = whoWeAre?.image
+    if (!image || typeof image === 'string') return null
+    return getMediaUrl((image as Media).url)
+  }
+
+  const imageUrl = getImageUrl()
+
   return (
     <Layout>
       {/* Hero Section */}
@@ -101,15 +103,16 @@ export default function AboutUsPageClient() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
           <AnimatedSection variants={fadeInUp} className="max-w-3xl mx-auto">
             <span className="inline-block py-1 px-3 rounded-full bg-teal/10 text-teal text-sm font-bold tracking-wider uppercase mb-6 border border-teal/20">
-              Hakkımızda
+              {hero.badge || 'Hakkımızda'}
             </span>
             <h1 className="font-['Bricolage_Grotesque'] text-4xl sm:text-5xl lg:text-7xl font-black text-white tracking-tight mb-8">
-              Dijital Dönüşümde <br className="hidden sm:block" />
-              <span className="text-teal">Güvenilir Ortağınız</span>
+              {hero.title?.replace(hero.titleHighlight || '', '') || 'Dijital Dönüşümde'}{' '}
+              <br className="hidden sm:block" />
+              <span className="text-teal">{hero.titleHighlight || 'Güvenilir Ortağınız'}</span>
             </h1>
             <p className="text-lg sm:text-xl text-slate-300 font-medium leading-relaxed mb-10">
-              İşletmenizi geleceğe taşıyacak yenilikçi çözümler sunuyor, dijital dünyadaki
-              potansiyelinizi en üst düzeye çıkarıyoruz.
+              {hero.description ||
+                'İşletmenizi geleceğe taşıyacak yenilikçi çözümler sunuyor, dijital dünyadaki potansiyelinizi en üst düzeye çıkarıyoruz.'}
             </p>
           </AnimatedSection>
         </div>
@@ -123,23 +126,27 @@ export default function AboutUsPageClient() {
             <AnimatedSection className="space-y-8">
               <motion.div variants={fadeInLeft}>
                 <span className="text-teal text-sm font-bold tracking-widest uppercase mb-3 block">
-                  Biz Kimiz?
+                  {whoWeAre.badge || 'Biz Kimiz?'}
                 </span>
                 <h2 className="font-['Bricolage_Grotesque'] text-3xl sm:text-5xl font-black text-navy tracking-tight leading-[1.1] mb-6">
-                  Deneyim ve Teknolojinin Buluşma Noktası
+                  {whoWeAre.title || 'Deneyim ve Teknolojinin Buluşma Noktası'}
                 </h2>
                 <div className="space-y-6 text-slate-600 text-lg leading-relaxed">
-                  <p>
-                    SED Insight olarak, modern iş dünyasının karmaşık gereksinimlerini anlıyor ve
-                    buna uygun yenilikçi, ölçeklenebilir dijital çözümler üretiyoruz. Amacımız,
-                    işletmelerin dijitalleşme süreçlerini hızlandırmak ve onlara rekabet avantajı
-                    sağlamaktır.
-                  </p>
-                  <p>
-                    Teknolojiye olan tutkumuz ve sektörel deneyimimizle, markanızın dijital
-                    varlığını güçlendirmek için buradayız. Her projeye, iş ortağımızın hedeflerini
-                    kendi hedefimiz gibi benimseyerek yaklaşıyoruz.
-                  </p>
+                  {whoWeAre.paragraphs?.map((para, index) => <p key={index}>{para.text}</p>) || (
+                    <>
+                      <p>
+                        SED Insight olarak, modern iş dünyasının karmaşık gereksinimlerini anlıyor
+                        ve buna uygun yenilikçi, ölçeklenebilir dijital çözümler üretiyoruz.
+                        Amacımız, işletmelerin dijitalleşme süreçlerini hızlandırmak ve onlara
+                        rekabet avantajı sağlamaktır.
+                      </p>
+                      <p>
+                        Teknolojiye olan tutkumuz ve sektörel deneyimimizle, markanızın dijital
+                        varlığını güçlendirmek için buradayız. Her projeye, iş ortağımızın
+                        hedeflerini kendi hedefimiz gibi benimseyerek yaklaşıyoruz.
+                      </p>
+                    </>
+                  )}
                 </div>
 
                 <div className="mt-10 grid sm:grid-cols-2 gap-6">
@@ -148,9 +155,12 @@ export default function AboutUsPageClient() {
                       <Target className="w-6 h-6 text-teal" />
                     </div>
                     <div>
-                      <h4 className="text-navy font-bold text-lg mb-1">Misyonumuz</h4>
+                      <h4 className="text-navy font-bold text-lg mb-1">
+                        {whoWeAre.mission?.title || 'Misyonumuz'}
+                      </h4>
                       <p className="text-slate-600 text-sm">
-                        İşletmeleri dijital çağın gereksinimlerine hazırlamak.
+                        {whoWeAre.mission?.description ||
+                          'İşletmeleri dijital çağın gereksinimlerine hazırlamak.'}
                       </p>
                     </div>
                   </div>
@@ -159,9 +169,12 @@ export default function AboutUsPageClient() {
                       <Target className="w-6 h-6 text-teal" />
                     </div>
                     <div>
-                      <h4 className="text-navy font-bold text-lg mb-1">Vizyonumuz</h4>
+                      <h4 className="text-navy font-bold text-lg mb-1">
+                        {whoWeAre.vision?.title || 'Vizyonumuz'}
+                      </h4>
                       <p className="text-slate-600 text-sm">
-                        Sektörde öncü ve yenilikçi bir teknoloji şirketi olmak.
+                        {whoWeAre.vision?.description ||
+                          'Sektörde öncü ve yenilikçi bir teknoloji şirketi olmak.'}
                       </p>
                     </div>
                   </div>
@@ -187,12 +200,22 @@ export default function AboutUsPageClient() {
                   {/* Placeholder for actual image */}
                   <div className="absolute inset-0 bg-linear-to-tr from-navy to-teal opacity-10 mix-blend-multiply" />
                   <div className="absolute inset-0 flex items-center justify-center text-slate-400 font-medium">
-                    <Image
-                      src={avatarImg}
-                      alt="Hakkımızda"
-                      className="w-full h-full object-cover"
-                      priority
-                    />
+                    {imageUrl ? (
+                      <Image
+                        src={imageUrl}
+                        alt={whoWeAre.title || 'Hakkımızda'}
+                        fill
+                        className="object-cover"
+                        priority
+                      />
+                    ) : (
+                      <Image
+                        src={avatarImg}
+                        alt="Hakkımızda"
+                        className="w-full h-full object-cover"
+                        priority
+                      />
+                    )}
                   </div>
 
                   {/* Floating Stat Card */}
@@ -217,16 +240,53 @@ export default function AboutUsPageClient() {
         <div className="absolute inset-0 bg-[url('/noise.png')] opacity-5 mix-blend-overlay" />
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <AnimatedSection className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 divide-x divide-white/10">
-            {stats.map((stat, index) => (
-              <motion.div key={index} variants={fadeInUp} className="text-center px-4">
-                <div className="text-4xl sm:text-5xl lg:text-6xl font-black text-white mb-2 font-['Bricolage_Grotesque'] tracking-tight">
-                  {stat.value}
-                </div>
-                <div className="text-teal font-bold uppercase tracking-wider text-sm">
-                  {stat.label}
-                </div>
-              </motion.div>
-            ))}
+            {stats.length > 0 ? (
+              stats.map((stat, index) => (
+                <motion.div key={index} variants={fadeInUp} className="text-center px-4">
+                  <div className="text-4xl sm:text-5xl lg:text-6xl font-black text-white mb-2 font-['Bricolage_Grotesque'] tracking-tight">
+                    {stat.value}
+                  </div>
+                  <div className="text-teal font-bold uppercase tracking-wider text-sm">
+                    {stat.label}
+                  </div>
+                </motion.div>
+              ))
+            ) : (
+              <>
+                <motion.div variants={fadeInUp} className="text-center px-4">
+                  <div className="text-4xl sm:text-5xl lg:text-6xl font-black text-white mb-2 font-['Bricolage_Grotesque'] tracking-tight">
+                    50+
+                  </div>
+                  <div className="text-teal font-bold uppercase tracking-wider text-sm">
+                    Tamamlanan Proje
+                  </div>
+                </motion.div>
+                <motion.div variants={fadeInUp} className="text-center px-4">
+                  <div className="text-4xl sm:text-5xl lg:text-6xl font-black text-white mb-2 font-['Bricolage_Grotesque'] tracking-tight">
+                    %99
+                  </div>
+                  <div className="text-teal font-bold uppercase tracking-wider text-sm">
+                    Müşteri Memnuniyeti
+                  </div>
+                </motion.div>
+                <motion.div variants={fadeInUp} className="text-center px-4">
+                  <div className="text-4xl sm:text-5xl lg:text-6xl font-black text-white mb-2 font-['Bricolage_Grotesque'] tracking-tight">
+                    10+
+                  </div>
+                  <div className="text-teal font-bold uppercase tracking-wider text-sm">
+                    Uzman Personel
+                  </div>
+                </motion.div>
+                <motion.div variants={fadeInUp} className="text-center px-4">
+                  <div className="text-4xl sm:text-5xl lg:text-6xl font-black text-white mb-2 font-['Bricolage_Grotesque'] tracking-tight">
+                    5+
+                  </div>
+                  <div className="text-teal font-bold uppercase tracking-wider text-sm">
+                    Yıllık Tecrübe
+                  </div>
+                </motion.div>
+              </>
+            )}
           </AnimatedSection>
         </div>
       </section>
@@ -239,30 +299,88 @@ export default function AboutUsPageClient() {
               variants={fadeInUp}
               className="text-teal text-sm font-bold tracking-widest uppercase mb-3 block"
             >
-              Neden Biz?
+              {whyChooseUs.badge || 'Neden Biz?'}
             </motion.span>
             <motion.h2
               variants={fadeInUp}
               className="font-['Bricolage_Grotesque'] text-3xl sm:text-5xl font-black text-navy tracking-tight leading-[1.1]"
             >
-              Sizi Rakiplerinizden <span className="text-teal">Öne Çıkarıyoruz</span>
+              {whyChooseUs.title?.replace(whyChooseUs.titleHighlight || '', '') ||
+                'Sizi Rakiplerinizden'}{' '}
+              <span className="text-teal">{whyChooseUs.titleHighlight || 'Öne Çıkarıyoruz'}</span>
             </motion.h2>
           </AnimatedSection>
 
           <AnimatedSection className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((feature, index) => (
-              <motion.div
-                key={index}
-                variants={fadeInUp}
-                className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group"
-              >
-                <div className="w-14 h-14 rounded-2xl bg-teal/5 flex items-center justify-center mb-6 group-hover:bg-teal transition-colors duration-300">
-                  <feature.icon className="w-7 h-7 text-teal group-hover:text-white transition-colors duration-300" />
-                </div>
-                <h3 className="text-xl font-bold text-navy mb-4">{feature.title}</h3>
-                <p className="text-slate-600 leading-relaxed">{feature.description}</p>
-              </motion.div>
-            ))}
+            {features.length > 0 ? (
+              features.map((feature, index) => {
+                const IconComponent = iconMap[feature.icon as keyof typeof iconMap] || Lightbulb
+                return (
+                  <motion.div
+                    key={index}
+                    variants={fadeInUp}
+                    className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group"
+                  >
+                    <div className="w-14 h-14 rounded-2xl bg-teal/5 flex items-center justify-center mb-6 group-hover:bg-teal transition-colors duration-300">
+                      <IconComponent className="w-7 h-7 text-teal group-hover:text-white transition-colors duration-300" />
+                    </div>
+                    <h3 className="text-xl font-bold text-navy mb-4">{feature.title}</h3>
+                    <p className="text-slate-600 leading-relaxed">{feature.description}</p>
+                  </motion.div>
+                )
+              })
+            ) : (
+              <>
+                <motion.div
+                  variants={fadeInUp}
+                  className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group"
+                >
+                  <div className="w-14 h-14 rounded-2xl bg-teal/5 flex items-center justify-center mb-6 group-hover:bg-teal transition-colors duration-300">
+                    <Lightbulb className="w-7 h-7 text-teal group-hover:text-white transition-colors duration-300" />
+                  </div>
+                  <h3 className="text-xl font-bold text-navy mb-4">İnovatif Çözümler</h3>
+                  <p className="text-slate-600 leading-relaxed">
+                    En son teknolojileri kullanarak işletmenize özel dijital çözümler üretiyoruz.
+                  </p>
+                </motion.div>
+                <motion.div
+                  variants={fadeInUp}
+                  className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group"
+                >
+                  <div className="w-14 h-14 rounded-2xl bg-teal/5 flex items-center justify-center mb-6 group-hover:bg-teal transition-colors duration-300">
+                    <Users className="w-7 h-7 text-teal group-hover:text-white transition-colors duration-300" />
+                  </div>
+                  <h3 className="text-xl font-bold text-navy mb-4">Uzman Kadro</h3>
+                  <p className="text-slate-600 leading-relaxed">
+                    Alanında deneyimli profesyonellerden oluşan ekibimizle yanınızdayız.
+                  </p>
+                </motion.div>
+                <motion.div
+                  variants={fadeInUp}
+                  className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group"
+                >
+                  <div className="w-14 h-14 rounded-2xl bg-teal/5 flex items-center justify-center mb-6 group-hover:bg-teal transition-colors duration-300">
+                    <Zap className="w-7 h-7 text-teal group-hover:text-white transition-colors duration-300" />
+                  </div>
+                  <h3 className="text-xl font-bold text-navy mb-4">Hızlı Uygulama</h3>
+                  <p className="text-slate-600 leading-relaxed">
+                    Projelerinizi söz verdiğimiz sürede, en yüksek kalitede teslim ediyoruz.
+                  </p>
+                </motion.div>
+                <motion.div
+                  variants={fadeInUp}
+                  className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group"
+                >
+                  <div className="w-14 h-14 rounded-2xl bg-teal/5 flex items-center justify-center mb-6 group-hover:bg-teal transition-colors duration-300">
+                    <Award className="w-7 h-7 text-teal group-hover:text-white transition-colors duration-300" />
+                  </div>
+                  <h3 className="text-xl font-bold text-navy mb-4">Garantili Başarı</h3>
+                  <p className="text-slate-600 leading-relaxed">
+                    Ölçülebilir sonuçlar ve sürekli optimizasyon ile başarıyı garantiliyoruz.
+                  </p>
+                </motion.div>
+              </>
+            )}
           </AnimatedSection>
         </div>
       </section>

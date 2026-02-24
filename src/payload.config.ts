@@ -13,6 +13,7 @@ import { Posts } from './collections/Posts'
 import { ServicePageSettings } from './collections/ServicePageSettings'
 import { Services } from './collections/Services'
 import { Users } from './collections/Users'
+import { AboutUs } from './globals/AboutUs'
 import { Footer } from './Footer/config'
 import { Header } from './Header/config'
 import { plugins } from './plugins'
@@ -73,7 +74,7 @@ export default buildConfig({
   }),
   collections: [Pages, Posts, Media, Categories, Users, FAQItems, Services, ServicePageSettings],
   cors: [getServerSideURL()].filter(Boolean),
-  globals: [Header, Footer],
+  globals: [AboutUs, Header, Footer],
   plugins,
   secret: process.env.PAYLOAD_SECRET,
   sharp,

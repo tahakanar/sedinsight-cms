@@ -1,8 +1,28 @@
-import { getServiceDataBundle } from '@/lib/services'
+import type { Metadata } from 'next'
+import React from 'react'
+import { getAboutUs } from '@/utilities/getAboutUs'
 import AboutUsPageClient from './page.client'
+import { LivePreviewListener } from '@/components/LivePreviewListener'
+import { draftMode } from 'next/headers'
+import { generateMeta } from '@/utilities/generateMeta'
+
+export async function generateMetadata(): Promise<Metadata> {
+  const aboutUs = await getAboutUs()
+
+  return {
+    title: aboutUs?.hero?.title || 'Hakkımızda',
+    description: aboutUs?.hero?.description || undefined,
+  }
+}
 
 export default async function AboutUsPage() {
-  await getServiceDataBundle() // Or remove this line entirely if not needed, but keeping it in case it triggers some necessary server-side fetch caching
+  const aboutUs = await getAboutUs()
+  const { isEnabled: isDraftMode } = await draftMode()
 
-  return <AboutUsPageClient />
+  return (
+    <>
+      <AboutUsPageClient data={aboutUs} />
+      {isDraftMode && <LivePreviewListener />}
+    </>
+  )
 }

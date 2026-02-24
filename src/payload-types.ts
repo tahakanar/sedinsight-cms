@@ -116,10 +116,12 @@ export interface Config {
   };
   fallbackLocale: null;
   globals: {
+    'about-us': AboutUs;
     header: Header;
     footer: Footer;
   };
   globalsSelect: {
+    'about-us': AboutUsSelect<false> | AboutUsSelect<true>;
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
   };
@@ -1865,6 +1867,66 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "about-us".
+ */
+export interface AboutUs {
+  id: number;
+  hero: {
+    badge: string;
+    title: string;
+    titleHighlight?: string | null;
+    description: string;
+  };
+  whoWeAre: {
+    badge?: string | null;
+    title: string;
+    paragraphs?:
+      | {
+          text: string;
+          id?: string | null;
+        }[]
+      | null;
+    image?: (number | null) | Media;
+    mission: {
+      title: string;
+      description: string;
+    };
+    vision: {
+      title: string;
+      description: string;
+    };
+  };
+  stats?:
+    | {
+        /**
+         * Örn: 50+, %99, 10+
+         */
+        value: string;
+        /**
+         * Örn: Tamamlanan Proje, Müşteri Memnuniyeti
+         */
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  whyChooseUs: {
+    badge?: string | null;
+    title: string;
+    titleHighlight?: string | null;
+    features?:
+      | {
+          icon: 'lightbulb' | 'users' | 'zap' | 'award' | 'target' | 'checkCircle';
+          title: string;
+          description: string;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header".
  */
 export interface Header {
@@ -1920,6 +1982,70 @@ export interface Footer {
     | null;
   updatedAt?: string | null;
   createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "about-us_select".
+ */
+export interface AboutUsSelect<T extends boolean = true> {
+  hero?:
+    | T
+    | {
+        badge?: T;
+        title?: T;
+        titleHighlight?: T;
+        description?: T;
+      };
+  whoWeAre?:
+    | T
+    | {
+        badge?: T;
+        title?: T;
+        paragraphs?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+            };
+        image?: T;
+        mission?:
+          | T
+          | {
+              title?: T;
+              description?: T;
+            };
+        vision?:
+          | T
+          | {
+              title?: T;
+              description?: T;
+            };
+      };
+  stats?:
+    | T
+    | {
+        value?: T;
+        label?: T;
+        id?: T;
+      };
+  whyChooseUs?:
+    | T
+    | {
+        badge?: T;
+        title?: T;
+        titleHighlight?: T;
+        features?:
+          | T
+          | {
+              icon?: T;
+              title?: T;
+              description?: T;
+              id?: T;
+            };
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
